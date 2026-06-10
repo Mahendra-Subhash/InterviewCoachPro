@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Coach Pro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+        <h2>🤖 ICP</h2>
+
+        <button class="new-chat-btn" onclick="newChat()">
+            + New Chat
+        </button>
+
+        <div class="chat-history">
+            <div class="history-item">
+                AI Interview Prep
+            </div>
+
+            <div class="history-item">
+                Resume Review
+            </div>
+
+            <div class="history-item">
+                Career Guidance
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Main Chat Area -->
+    <div class="main">
+
+        <div class="topbar">
+            Interview Coach Pro
+        </div>
+
+        <div id="chat-box">
+
+            <div class="message ai-message">
+
+                <div class="avatar">
+                    🤖
+                </div>
+
+                <div class="bubble">
+                    Hello Mahendra 👋
+
+                    I am your Interview Coach AI.
+
+                    Ask me anything about:
+                    • DSA
+                    • System Design
+                    • AI/ML
+                    • Resume Building
+                    • Mock Interviews
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="input-container">
+
+            <input
+                type="text"
+                id="user-input"
+                placeholder="Message Interview Coach Pro..."
+                onkeypress="handleKeyPress(event)"
+            >
+
+            <button onclick="sendMessage()">
+                Send
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
