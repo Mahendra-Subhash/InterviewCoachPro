@@ -3,89 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interview Coach Pro</title>
+    <!-- Split deploy only: set to your Render backend URL (e.g. https://interview-coach-pro.onrender.com) -->
+    <meta name="api-base-url" content="">
+    <title>Interview Coach Pro - AI Interview Coaching</title>
+    <!-- Import Modern Premium Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="app">
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-
-        <h2>🤖 ICP</h2>
-
-        <button class="new-chat-btn" onclick="newChat()">
-            + New Chat
-        </button>
-
-        <div class="chat-history">
-            <div class="history-item">
-                AI Interview Prep
-            </div>
-
-            <div class="history-item">
-                Resume Review
-            </div>
-
-            <div class="history-item">
-                Career Guidance
-            </div>
-        </div>
-
+<!-- Application Initialization Loader -->
+<div class="app-loader" id="app-loader">
+    <div class="loader-content">
+        <div class="spinner"></div>
+        <h2>Coach Pro</h2>
+        <p>Initializing Session...</p>
     </div>
-
-    <!-- Main Chat Area -->
-    <div class="main">
-
-        <div class="topbar">
-            Interview Coach Pro
-        </div>
-
-        <div id="chat-box">
-
-            <div class="message ai-message">
-
-                <div class="avatar">
-                    🤖
-                </div>
-
-                <div class="bubble">
-                    Hello Mahendra 👋
-
-                    I am your Interview Coach AI.
-
-                    Ask me anything about:
-                    • DSA
-                    • System Design
-                    • AI/ML
-                    • Resume Building
-                    • Mock Interviews
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="input-container">
-
-            <input
-                type="text"
-                id="user-input"
-                placeholder="Message Interview Coach Pro..."
-                onkeypress="handleKeyPress(event)"
-            >
-
-            <button onclick="sendMessage()">
-                Send
-            </button>
-
-        </div>
-
-    </div>
-
 </div>
 
+<div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="logo-icon"><path d="M12 2a10 10 0 0 1 7.54 16.59c-.45.54-.3.84.18 1.41a3 3 0 0 0 4.28 0 3 3 0 0 0 0-4.28c-.57-.48-.87-.63-1.41-.18A10 10 0 1 1 12 2Z"></path><path d="M12 18v4"></path><path d="M8 22h8"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <span>Coach Pro</span>
+            </div>
+            <button class="sidebar-close" id="sidebar-close-btn" onclick="toggleSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+
+        <button class="new-chat-btn" onclick="createNewSession()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>New Session</span>
+        </button>
+
+        <div class="history-label">Past Conversations</div>
+        <div class="chat-history" id="chat-history">
+            <!-- Dynamic items go here -->
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="user-avatar">M</div>
+                <div class="user-details">
+                    <span class="user-name">Mahendra</span>
+                    <span class="user-role">Candidate</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Sidebar Overlay for mobile screen -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Main Chat Area -->
+    <main class="main">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="menu-btn" id="menu-btn" onclick="toggleSidebar()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+                <div class="title-container">
+                    <h1 class="app-title">Interview Coach Pro</h1>
+                    <span class="model-badge">Gemini 2.5 Flash</span>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <button class="icon-btn" onclick="createNewSession()" title="Reset Session">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Messages Container -->
+        <div id="chat-box" class="chat-box">
+            <!-- Welcome screen (empty state) -->
+            <div id="welcome-screen" class="welcome-screen">
+                <div class="welcome-header">
+                    <div class="large-logo">🤖</div>
+                    <h2>How can I help you prepare today?</h2>
+                    <p>I can help you practice coding, design systems, polish your resume, or simulate mock interviews.</p>
+                </div>
+                
+                <div class="suggestion-grid">
+                    <div class="suggestion-card" onclick="usePresetPrompt('Conduct a mock System Design interview for a system like Netflix.')">
+                        <div class="card-icon">🏗️</div>
+                        <div class="card-content">
+                            <h3>System Design</h3>
+                            <p>Mock interview for a scalable streaming system.</p>
+                        </div>
+                    </div>
+                    <div class="suggestion-card" onclick="usePresetPrompt('I want to do a mock technical coding interview on Binary Tree traversal in Python.')">
+                        <div class="card-icon">💻</div>
+                        <div class="card-content">
+                            <h3>DSA Traversal</h3>
+                            <p>Mock coding interview on tree traverse algorithms.</p>
+                        </div>
+                    </div>
+                    <div class="suggestion-card" onclick="usePresetPrompt('Please review the bullet points of my software engineer resume and provide recommendations.')">
+                        <div class="card-icon">📄</div>
+                        <div class="card-content">
+                            <h3>Resume Polish</h3>
+                            <p>Analyze and improve bullet points for impact.</p>
+                        </div>
+                    </div>
+                    <div class="suggestion-card" onclick="usePresetPrompt('Ask me behavioral interview questions for a Senior SDE role using the STAR method.')">
+                        <div class="card-icon">👥</div>
+                        <div class="card-content">
+                            <h3>STAR Behavioral</h3>
+                            <p>Practice standard behavioral interview questions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area Container -->
+        <div class="input-area-container">
+            <div class="input-container">
+                <textarea
+                    id="user-input"
+                    placeholder="Ask a question or paste your resume/job description..."
+                    rows="1"
+                    onkeydown="handleKeyPress(event)"
+                ></textarea>
+                <button id="send-btn" onclick="sendMessage()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="send-icon"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </div>
+            <div class="input-footer">
+                Interview Coach Pro can make mistakes. Verify code and technical solutions.
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Feedback Modal -->
+<div class="modal-backdrop" id="feedback-modal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>Submit Feedback</h3>
+            <button class="close-btn" onclick="closeFeedbackModal()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>How would you rate the AI's response?</label>
+                <div class="rating-selector">
+                    <button type="button" class="rating-btn" onclick="selectRating(1)">1</button>
+                    <button type="button" class="rating-btn" onclick="selectRating(2)">2</button>
+                    <button type="button" class="rating-btn" onclick="selectRating(3)">3</button>
+                    <button type="button" class="rating-btn" onclick="selectRating(4)">4</button>
+                    <button type="button" class="rating-btn" onclick="selectRating(5)">5</button>
+                    <button type="button" class="rating-btn" onclick="selectRating(6)">6</button>
+                    <button type="button" class="rating-btn" onclick="selectRating(7)">7</button>
+                    <button type="button" class="rating-btn" onclick="selectRating(8)">8</button>
+                    <button type="button" class="rating-btn" onclick="selectRating(9)">9</button>
+                    <button type="button" class="rating-btn" onclick="selectRating(10)">10</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="feedback-text">Comments or suggestions for improvement:</label>
+                <textarea id="feedback-text" placeholder="Explain what was good or what could be improved..."></textarea>
+            </div>
+            <div id="modal-error" class="modal-error-message"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeFeedbackModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="submitFeedbackForm()">Submit Feedback</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script src="script.js"></script>
 
 </body>
